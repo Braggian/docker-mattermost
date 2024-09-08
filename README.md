@@ -3,7 +3,7 @@
 # - Postgresql 15.0
 
 # Ejecutar los siguientes pasos:
-git clone https://github.com/Braggian/docker-mattermost/
+$ git clone https://github.com/Braggian/docker-mattermost/
 $ cd docker-mattermost
 $ mkdir -p mattermost && cd mattermost
 $ mkdir -p mattermost/{config,data,logs,plugins,client/plugins,bleve-indexes} 
