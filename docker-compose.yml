@@ -1,0 +1,61 @@
+services: 
+
+  mattermost: 
+    container_name: mattermost
+    hostname: mattermost
+    depends_on: 
+      - postgres
+    env_file: 
+      - .env
+    image: "mattermost/mattermost-team-edition:8.0"
+    pids_limit: 200
+    ports: 
+      - "8065:8065"
+    read_only: false
+    restart: unless-stopped
+    security_opt: 
+      - "no-new-privileges:true"
+    tmpfs: 
+      - /tmp
+    volumes: 
+      - "./mattermost/config:/mattermost/config:rw"
+      - "./mattermost/data:/mattermost/data:rw"
+      - "./mattermost/logs:/mattermost/logs:rw"
+      - "./mattermost/plugins:/mattermost/plugins:rw"
+      - "./mattermost/client/plugins:/mattermost/client/plugins:rw"
+      - "./mattermost/bleve-indexes:/mattermost/bleve-indexes:rw"
+    networks:
+      mattermost-network:
+        ipv4_address: 11.15.30.2
+
+  postgres: 
+    container_name: postgres
+    hostname: postgres
+    env_file: 
+      - .env
+    image: "postgres:15.3"
+    read_only: true
+    restart: unless-stopped
+    security_opt: 
+      - "no-new-privileges:true"
+    tmpfs: 
+      - /tmp
+    volumes: 
+      - "./postgresql/data:/var/lib/postgresql/data"
+      - "lock:/var/run/postgresql"
+    networks:
+      mattermost-network:
+        ipv4_address: 11.15.30.3
+
+networks:
+  mattermost-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 11.15.30.0/24
+          gateway: 11.15.30.254
+
+
+volumes: 
+  lock: ~
